@@ -105,7 +105,7 @@
 #define ContrastColor(backgroundColor, returnFlat) [UIColor colorWithContrastingBlackOrWhiteColorOn:backgroundColor isFlat:returnFlat]
 #define ContrastColorWithAlpha(backgroundColor, returnFlat, alpha) [UIColor colorWithContrastingBlackOrWhiteColorOn:backgroundColor isFlat:returnFlat alpha:alpha]
 
-#define GradientColor(gradientStyle, frame, colors) [UIColor colorWithGradientStyle:gradientStyle withFrame:frame andColors:colors]
+#define GradientColor(gradientStyle, frame, colors, locations, start, end) [UIColor colorWithGradientStyle:gradientStyle withFrame:frame colors:colors andLocations:locations withStart:start andEnd:end]
 
 #define HexColor(hexString) [UIColor colorWithHexString:hexString]
 #define HexColorWithAlpha(hexString, alpha) [UIColor colorWithHexString:hexString withAlpha:alpha]

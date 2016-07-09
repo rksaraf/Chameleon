@@ -589,12 +589,16 @@ typedef NS_ENUM (NSInteger, UIShadeStyle) {
  *  @param gradientStyle Specifies the style and direction of the gradual blend between colors.
  *  @param frame The frame rectangle, which describes the view’s location and size in its superview’s coordinate system.
  *  @param colors An array of color objects used to create a gradient.
+ *  @param locations An array of NSNumber objects for the locations of the gradient
+ *  @param start A CGPoint for the start location
+ *  @param end A CGPoint for the end location
  *
  *  @return A @c UIColor object using colorWithPattern.
  *
  *  @since 2.0
  */
-+ (UIColor *)colorWithGradientStyle:(UIGradientStyle)gradientStyle withFrame:(CGRect)frame andColors:(NSArray *)colors;
++ (UIColor *)colorWithGradientStyle:(UIGradientStyle)gradientStyle withFrame:(CGRect)frame colors:(NSArray *)colors
+                       andLocations:(NSArray<NSNumber *> *)locations withStart:(CGPoint)start andEnd:(CGPoint)end;
 
 #pragma mark - Colors from Hex Strings
 

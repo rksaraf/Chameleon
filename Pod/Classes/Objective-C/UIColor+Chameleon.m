@@ -470,7 +470,8 @@
     }
 }
 
-+ (UIColor *)colorWithGradientStyle:(UIGradientStyle)gradientStyle withFrame:(CGRect)frame andColors:(NSArray *)colors; {
++ (UIColor *)colorWithGradientStyle:(UIGradientStyle)gradientStyle withFrame:(CGRect)frame colors:(NSArray *)colors
+                       andLocations:(NSArray<NSNumber *> *)locations withStart:(CGPoint)start andEnd:(CGPoint)end {
     
     //Create our background gradient layer
     CAGradientLayer *backgroundGradientLayer = [CAGradientLayer layer];
@@ -491,8 +492,11 @@
             backgroundGradientLayer.colors = cgColors;
             
             //Specify the direction our gradient will take
-            [backgroundGradientLayer setStartPoint:CGPointMake(0.0, 0.5)];
-            [backgroundGradientLayer setEndPoint:CGPointMake(1.0, 0.5)];
+            [backgroundGradientLayer setStartPoint:start];
+            [backgroundGradientLayer setEndPoint:end];
+            
+            //Set locations for colors
+            backgroundGradientLayer.locations = locations;
             
             //Convert our CALayer to a UIImage object
             UIGraphicsBeginImageContextWithOptions(backgroundGradientLayer.bounds.size,NO, [UIScreen mainScreen].scale);
@@ -506,25 +510,40 @@
             
         case UIGradientStyleRadial: {
             UIGraphicsBeginImageContextWithOptions(frame.size,NO, [UIScreen mainScreen].scale);
-            
-            //Specific the spread of the gradient (For now this gradient only takes 2 locations)
-            CGFloat locations[2] = {0.0, 1.0};
 
             //Default to the RGB Colorspace
             CGColorSpaceRef myColorspace = CGColorSpaceCreateDeviceRGB();
             CFArrayRef arrayRef = (__bridge CFArrayRef)cgColors;
             
-            //Create our Fradient
-            CGGradientRef myGradient = CGGradientCreateWithColors(myColorspace, arrayRef, locations);
+            //Specify the direction our gradient will take
+            [backgroundGradientLayer setStartPoint:start];
+            [backgroundGradientLayer setEndPoint:end];
             
+            CGGradientRef myGradient = nil;
+            if (locations != nil) { //SPECIFIC LOCATIONS
+                
+                //Specific the spread of the gradient (For now this gradient only takes 2 locations)
+                //CGFloat cLocations[locations.count] = {0.0, 1.0};
+                CGFloat *cLocations = (CGFloat *)malloc(sizeof(CGFloat) * locations.count);
+                for (int i = 0; i < locations.count; i++) {
+                    cLocations[i] = [[locations objectAtIndex:i] floatValue];
+                }
+                
+                //Create our Gradient
+                myGradient = CGGradientCreateWithColors(myColorspace, arrayRef, cLocations);
+                
+            } else { //DEFAULT LOCATIONS
+                
+                //Create our Gradien
+                myGradient = CGGradientCreateWithColors(myColorspace, arrayRef, NULL);
+            }
  
             // Normalise the 0-1 ranged inputs to the width of the image
-            CGPoint myCentrePoint = CGPointMake(0.5 * frame.size.width, 0.5 * frame.size.height);
             float myRadius = MIN(frame.size.width, frame.size.height) * 1.0;
             
             // Draw our Gradient
-            CGContextDrawRadialGradient (UIGraphicsGetCurrentContext(), myGradient, myCentrePoint,
-                                         0, myCentrePoint, myRadius,
+            CGContextDrawRadialGradient (UIGraphicsGetCurrentContext(), myGradient, backgroundGradientLayer.startPoint,
+                                         0, backgroundGradientLayer.endPoint, myRadius,
                                          kCGGradientDrawsAfterEndLocation);
             
             // Grab it as an Image
@@ -544,6 +563,13 @@
             
             //Set out gradient's colors
             backgroundGradientLayer.colors = cgColors;
+            
+            //Specify the direction our gradient will take
+            [backgroundGradientLayer setStartPoint:start];
+            [backgroundGradientLayer setEndPoint:end];
+            
+            //Set locations for colors
+            backgroundGradientLayer.locations = locations;
             
             //Convert our CALayer to a UIImage object
             UIGraphicsBeginImageContextWithOptions(backgroundGradientLayer.bounds.size,NO, [UIScreen mainScreen].scale);

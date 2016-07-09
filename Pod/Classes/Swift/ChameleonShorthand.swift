@@ -71,11 +71,14 @@ public func ContrastColorOf(backgroundColor: UIColor, returnFlat: Bool) -> UICol
  - parameter gradientStyle: Specifies the style and direction of the gradual blend between colors.
  - parameter frame:         The frame rectangle, which describes the view’s location and size in its superview’s coordinate system.
  - parameter colors:        An array of color objects used to create a gradient.
+ - parameter locations:     An array of number objects used to configure the locations of the gradient
+ - parameter start:         A point for the start location of the gradient
+ - parameter end:           A point for the end location of the gradient
  
  - returns: A UIColor object using colorWithPattern.
  */
-public func GradientColor(gradientStyle: UIGradientStyle, frame: CGRect, colors: [UIColor]) -> UIColor {
-    return UIColor(gradientStyle: gradientStyle, withFrame: frame, andColors: colors)
+public func GradientColor(gradientStyle: UIGradientStyle, frame: CGRect, colors: [UIColor], locations : Array<NSNumber>, start : CGPoint, end: CGPoint) -> UIColor {
+    return UIColor(gradientStyle: gradientStyle, withFrame: frame, colors: colors, andLocations: locations, withStart: start, andEnd: end)
 }
 
 public func HexColor(hexString: String, _ alpha: CGFloat = 1.0) -> UIColor {
